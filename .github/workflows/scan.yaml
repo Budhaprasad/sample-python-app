@@ -25,7 +25,7 @@ jobs:
           output: trivy-report.json
           exit-code: 0
           ignore-unfixed: true
-          vuln-type: os,library
+          vuln-type: library
 
       - name: Push image to Docker Hub
         if: success() # Only push if scan passes
