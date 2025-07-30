@@ -4,6 +4,32 @@ on:
   workflow_dispatch:
 
 jobs:
+  build-scan-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t tammu431budda/githubactions:latest .
+
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: tammu431budda/githubactions:latest
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+          vuln-type: os,library
+
+      - name: Push image to Docker Hub
+        if: success() # Only push if scan passes
+        run: docker push tammu431budda/githubactions:latest
+        
   codeql-scan:
     name: CodeQL Scan
     runs-on: ubuntu-latest
