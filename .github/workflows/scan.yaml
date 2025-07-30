@@ -50,7 +50,8 @@ jobs:
       - name: Scan Docker image (if applicable)
         working-directory: ${{ github.workspace }}
         run: |
-          docker build -t my-app:latest .
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker build -t tammu431budda/githubactions:latest .
           trivy image --exit-code 1 --severity HIGH,CRITICAL my-app:latest
 
   gitleaks-scan:
