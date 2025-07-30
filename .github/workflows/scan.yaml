@@ -26,6 +26,12 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
 
+      - name: Upload Trivy scan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.json
+
       - name: Push image to Docker Hub
         if: success() # Only push if scan passes
         run: docker push tammu431budda/githubactions:latest
