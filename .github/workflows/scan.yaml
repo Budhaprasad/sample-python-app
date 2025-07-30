@@ -26,11 +26,15 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
 
-      - name: Upload Trivy scan report
-        uses: actions/upload-artifact@v4
+      - name: Install Trivy and scan Docker image
+        uses: aquasecurity/trivy-action@master
         with:
-          name: trivy-report
-          path: trivy-report.json
+          image-ref: tammu431budda/githubactions:latest
+          format: json
+          output: trivy-report.json
+          exit-code: 0
+          ignore-unfixed: true
+          vuln-type: os,library
 
       - name: Push image to Docker Hub
         if: success() # Only push if scan passes
