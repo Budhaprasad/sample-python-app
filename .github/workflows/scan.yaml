@@ -39,6 +39,7 @@ jobs:
           trivy fs . --exit-code 1 --severity HIGH,CRITICAL --format table
 
       - name: Scan Docker image (if applicable)
+        working-directory: ${{ github.workspace }}
         run: |
           docker build -t my-app:latest .
           trivy image --exit-code 1 --severity HIGH,CRITICAL my-app:latest
